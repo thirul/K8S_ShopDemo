@@ -1,0 +1,18 @@
+# service.yml
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-shipping-service
+    labels:
+        app: service-shipping-service-app
+spec:
+  ports:
+    - port: 8111 #node port / LoadBalance
+      protocol: TCP
+      targetPort: 80 # container port 80
+  selector:
+    app: pod-shipping-service
+    component: netcore-app
+    version: 0.0.1
+  type: LoadBalancer
+

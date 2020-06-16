@@ -1,0 +1,13 @@
+ apiVersion: networking.k8s.io/v1beta1 # for versions before 1.14 use extensions/v1beta1
+ kind: Ingress
+ metadata:
+   name: ingress-order-service   
+ spec:
+   rules:
+   - host: order.eshopper.com
+     http:
+       paths:       
+       - path: /
+         backend:
+           serviceName: service-order-service
+           servicePort: 8111       

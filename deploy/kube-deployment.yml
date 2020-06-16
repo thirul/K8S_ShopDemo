@@ -1,0 +1,115 @@
+#kube-deployment.yml 
+
+# ORDER - Deployment for PODS
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: deploy-order-service
+spec:
+  selector:
+    matchLabels:
+      app: pod-order-service
+      component: netcore-app
+  replicas: 3 # tells deployment to run 3 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: pod-order-service
+        component: netcore-app
+        version: 0.0.1
+    spec:
+      containers:
+      - name: container-order-service
+        image: thirul/order-service:0.0.1
+        ports:
+        - containerPort: 80
+---
+# ORDER - Create Service
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-order-service
+    labels:
+        app: service-order-service-app
+spec:
+  ports:
+    - port: 8111 #node port / LoadBalance
+      protocol: TCP
+      targetPort: 80 # container port 80
+  selector:
+    app: pod-order-service
+    component: netcore-app
+    version: 0.0.1
+  type: LoadBalancer
+---
+#ORDER - Ingress routing to order.eshopper.com
+ apiVersion: networking.k8s.io/v1beta1
+ kind: Ingress
+ metadata:
+   name: ingress-order-service   
+ spec:
+   rules:
+   - host: order.eshopper.com
+     http:
+       paths:       
+       - path: /
+         backend:
+           serviceName: service-order-service
+           servicePort: 8111
+---
+# SHIPPING - create shipping pods
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: deploy-shipping-service
+spec:
+  selector:
+    matchLabels:
+      app: pod-shipping-service
+      component: netcore-app
+  replicas: 3 # tells deployment to run 3 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: pod-shipping-service
+        component: netcore-app
+        version: 0.0.1
+    spec:
+      containers:
+      - name: container-shipping-service
+        image: thirul/shipping-service:0.0.1
+        ports:
+        - containerPort: 80
+---
+# SHIPPING - create shipping service
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-shipping-service
+    labels:
+        app: service-shipping-service-app
+spec:
+  ports:
+    - port: 8111 #node port / LoadBalance
+      protocol: TCP
+      targetPort: 80 # container port 80
+  selector:
+    app: pod-shipping-service
+    component: netcore-app
+    version: 0.0.1
+  type: LoadBalancer
+---
+# SHIPPING - creating ingress route 
+ apiVersion: networking.k8s.io/v1beta1
+ kind: Ingress
+ metadata:
+   name: ingress-shipping-service   
+ spec:
+   rules:
+   - host: shipping.eshopper.com
+     http:
+       paths:       
+       - path: /                
+         backend:
+           serviceName: service-shipping-service
+           servicePort: 8111
