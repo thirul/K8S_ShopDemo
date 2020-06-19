@@ -1,0 +1,17 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as builder
+WORKDIR /src
+COPY ./Shop.Db.Shipping.csproj .
+RUN dotnet restore Shop.Db.Shipping.csproj
+
+
+COPY . .
+RUN dotnet build Shop.Db.Shipping.csproj -c release -o /src/out
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 
+WORKDIR /app
+COPY --from=builder /src/out .
+
+ENTRYPOINT ["dotnet", "Shop.Db.Shipping.dll"]
+
+#docker build -t shipping-db:0.0.1 .
+#docker run -it -e 'ConnectionString="Server=192.168.73.81,1403;database=eshoporder;user id=sa;password=Pass@12345"' shipping-db:0.0.1

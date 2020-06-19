@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Scripts\1.sql" />
+    <None Remove="Scripts\2.sql" />
+    <None Remove="Scripts\3.sql" />
+    <None Remove="Scripts\4.sql" />
+    <None Remove="Scripts\5.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\5.sql" />
+    <EmbeddedResource Include="Scripts\4.sql" />
+    <EmbeddedResource Include="Scripts\3.sql" />
+    <EmbeddedResource Include="Scripts\2.sql" />
+    <EmbeddedResource Include="Scripts\1.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dbup" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>

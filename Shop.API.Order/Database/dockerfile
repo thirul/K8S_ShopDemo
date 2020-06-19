@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+COPY ./Scripts/order-db.sql .
+ENV ACCEPT_EULA Y
+ENV MSSQL_SA_PASSWORD Pass@1234
+RUN sleep 25 & /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Pass@1234 -i /order-db.sql  & /opt/mssql/bin/sqlservr
+EXPOSE 1433
+
+
+
+#docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YourStrong!Passw0rd>" -p 1401:1433 -d mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+#docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YourStrong!Passw0rd>" -p 1402:1433 -d mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+
+
+#sleep 25 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P pass@1234 -i /order.database.sql & /opt/mssql/bin/sqlservr
