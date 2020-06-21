@@ -2,6 +2,7 @@
 using Shop.API.Order.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Shop.API.Order.Controllers
@@ -10,9 +11,15 @@ namespace Shop.API.Order.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
+        private OrderContext _orderContext;
+        public OrderController(OrderContext orderContext)
+        {
+            this._orderContext = orderContext;
+        }
 
         public async Task<IEnumerable<OrderModel>> Get() {
-            return OrderMock.BuildOrders();
+
+            return _orderContext.Orders.ToList();
         }
 
         [Route("keys")]

@@ -1,0 +1,21 @@
+version: '3'
+services:
+    db:
+        build: ../Shop.API.Order/Database/
+        image: order-db:0.0.2
+        ports:
+        -   "1448:1433"
+        environment:
+        -   SA_PASSWORD= Pass@1234
+            ACCEPT_EULA= Y
+            MSSQL_PID= Express
+    web:
+        build: ../Shop.API.Order/
+        image: order-service:0.0.2
+        ports:
+        -   "8222:80"
+        environment:
+        -   CONNECTION_STRING= 'Server=localhost,1448;Database=eShopOrder;User Id=SA;Password=Pass@1234'
+        depends_on:
+        -   db
+        
